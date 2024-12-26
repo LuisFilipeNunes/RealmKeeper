@@ -1,0 +1,53 @@
+{% extends "auth_menu/base.html" %}
+
+{% block title %}Welcome {{ username }}{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="landing-container">
+    <div class="content-wrapper">
+        <div class="hero-section">
+            {% if session['first_login'] %}
+                <h1 class="main-title">Welcome aboard, {{ username }}!</h1>
+                <p class="hero-subtitle">Ready to start your journey?</p>
+            {% else %}
+                <h1 class="main-title">Welcome back, {{ username }}!</h1>
+                <p class="hero-subtitle">Ready to continue your journey?</p>
+            {% endif %}
+        </div>
+        
+        <div class="menu-blocks">
+            <a href="#" class="menu-block">
+                <div class="block-content">
+                    <i class="fas fa-globe"></i>
+                    <h3>Realms</h3>
+                </div>
+            </a>
+            <a href="#" class="menu-block">
+                <div class="block-content">
+                    <i class="fas fa-envelope"></i>
+                    <h3>Messages</h3>
+                </div>
+            </a>
+            <a href="#" class="menu-block">
+                <div class="block-content">
+                    <i class="fas fa-user"></i>
+                    <h3>Profile</h3>
+                </div>
+            </a>
+            <a href="#" class="menu-block">
+                <div class="block-content">
+                    <i class="fas fa-cog"></i>
+                    <h3>Settings</h3>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="nav-controls">
+        <a href="{{ url_for('login.logout') }}" class="logout-button">Log Out</a>
+    </div>
+</div>
+{% endblock %}

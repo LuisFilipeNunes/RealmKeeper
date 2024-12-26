@@ -1,0 +1,45 @@
+{% extends "auth_menu/base.html" %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="landing-container">
+        <div class="content-wrapper"></div>
+        <div class="hero-section">
+            <h1 class="main-title">{{ page_title }}</h1>
+            <p class="hero-subtitle">{{ custom_message }}</p>
+        </div>
+        
+        <div class="presentation-section">
+            <h2 class="section-title">Why Choose Us</h2>
+            
+            <div class="features">
+                <div class="feature-box">
+                    <i class="fas fa-rocket feature-icon"></i>
+                    <h3>Fast & Efficient</h3>
+                    <p>Lightning-fast performance at your fingertips</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fas fa-shield-alt feature-icon"></i>
+                    <h3>Secure</h3>
+                    <p>Your data is protected with top-tier security</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fas fa-magic feature-icon"></i>
+                    <h3>Intuitive</h3>
+                    <p>Simple and powerful user experience</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <a href="/login" class="login-button">Get Started</a>
+            <p class="sub-text">New here? <a href="/register" class="register-link">Create an account</a></p>
+        </div>
+    </div>
+    </div>
+{% endblock %}
