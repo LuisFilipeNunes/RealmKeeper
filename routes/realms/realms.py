@@ -89,3 +89,5 @@ def create_node(realm_id):
     
     flash('Content created successfully!', 'success')
     return redirect(url_for('realms.view_realm', identifier=realm_id))
+
+

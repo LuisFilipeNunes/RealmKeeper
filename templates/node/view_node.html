@@ -1,0 +1,175 @@
+{% extends "realms/base_realms.html" %}
+
+{% block title %}{{ node.name }}{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/view-node.css') }}">
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{{ url_for('static', filename='js/node_script.js') }}"></script>
+<script>
+const token = "{{ csrf_token() }}";
+document.getElementById('saveChanges').addEventListener('click', async () => {
+        if (!hasUnsavedChanges) return;
+
+        const nodeData = {
+            name: document.querySelector('h1[contenteditable]').textContent.trim(),
+            description: document.querySelector('.editable-description').textContent.trim(),
+            node_id: '{{ node.uuid }}',
+            realm_id: '{{ realm_id }}'
+        };
+
+        try {
+            const response = await fetch('/node/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token
+                },
+                body: JSON.stringify(nodeData)
+            });
+            if (response.ok) {
+            hasUnsavedChanges = false;
+            document.getElementById('saveChanges').classList.remove('unsaved');
+            const saveBtn = document.getElementById('saveChanges');
+            saveBtn.innerHTML = '<i class="fas fa-check"></i> Saved';
+            
+            // Add success notification
+            const notification = document.createElement('div');
+            notification.className = 'notification success';
+            notification.innerHTML = '<i class="fas fa-check-circle"></i> Node updated successfully!';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+                notification.remove();
+            }, 2000);
+        }
+        } catch (error) {
+        console.error('Error saving changes:', error);
+        // Add error notification
+        const notification = document.createElement('div');
+        notification.className = 'notification error';
+        notification.innerHTML = '<i class="fas fa-exclamation-circle"></i> Failed to update node';
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 2000);
+    }
+    });
+
+</script>>
+{% endblock %}
+
+
+{% block realm_content %}
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<div class="node-view">
+    <div class="node-header">
+        <div class="node-title">
+            
+            <h1 contenteditable="true">{{ node.name }}</h1>
+            <span class="node-type">{{ node.type }}</span>
+            
+        </div>
+        <div class="node-actions">
+            <button class="action-btn" id="saveChanges">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+            <button class="action-btn">
+                <i class="fas fa-users"></i> Manage Permissions
+            </button>
+            <button class="action-btn">
+                <i class="fas fa-link"></i> Manage Links
+            </button>
+            <button class="action-btn">
+                <i class="fas fa-trash"></i> Delete
+            </button>
+        </div>
+    </div>
+    
+    <div class="node-content">
+        <div class="node-description">
+            <h2>Description</h2>
+            <div contenteditable="true" class="editable-description">{{ node.description }}</div>
+        </div>
+        
+        {% if node.type == 'lore' %}
+            <div class="node-metadata">
+                <h2>Lore Details</h2>
+                <p>Major Piece: {{ 'Yes' if node.major else 'No' }}</p>
+            </div>
+        {% endif %}
+        
+        {% if node.type == 'item' %}
+            <div class="node-metadata">
+                <h2>Item Details</h2>
+                <p>Current Holder: {{ node.current_holder }}</p>
+            </div>
+        {% endif %}
+        
+        {% if node.type == 'person' %}
+            <div class="node-metadata">
+                <h2>Character Details</h2>
+                <p>Player Character: {{ 'Yes' if node.is_player else 'No' }}</p>
+                {% if node.is_player %}
+                    <p>Player ID: {{ node.player_uuid }}</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+<button class="action-btn" style="padding: 8px 16px;" onclick="window.location.href='{{ url_for('realms.view_realm', identifier=realm_id) }}'>
+    <i class="fas fa-arrow-left"></i> Back to Realm
+</button>
+<div id="permissionsModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Manage Permissions</h2>
+        <div class="permissions-container">
+            <div class="permission-section">
+                <h3>Viewers</h3>
+                <div class="user-list" id="viewersList">
+                    {% for viewer in node.permissions.viewers %}
+                        <div class="user-item">
+                            <span>{{ viewer }}</span>
+                            <button class="remove-user" data-user="{{ viewer }}" data-role="viewer">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="add-user">
+                    <input type="text" placeholder="Add viewer by email">
+                    <button class="add-user-btn" data-role="viewer">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="permission-section">
+                <h3>Editors</h3>
+                <div class="user-list" id="editorsList">
+                    {% for editor in node.permissions.editors %}
+                        <div class="user-item">
+                            <span>{{ editor }}</span>
+                            <button class="remove-user" data-user="{{ editor }}" data-role="editor">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="add-user">
+                    <input type="text" placeholder="Add editor by email">
+                    <button class="add-user-btn" data-role="editor">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,6 @@
+# ignore Python cache files
+
+__pycache__/
+*.pyc
+*.pyo
+user_testing.py
