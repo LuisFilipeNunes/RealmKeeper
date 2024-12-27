@@ -9,6 +9,7 @@
     <div class="auth-box">
         <h1>Create Account</h1>
         <form method="POST" class="auth-form">
+            {{ form.csrf_token }}
             <div class="form-group">
                 <input type="text" name="username" placeholder="Username" required>
             </div>

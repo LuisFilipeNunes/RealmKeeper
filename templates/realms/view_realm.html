@@ -70,7 +70,7 @@
                 <button class="action-btn" id="openNodeModalButton">
                     <i class="fas fa-plus"></i> Add Content
                 </button>
-                <button class="action-btn">
+                <button class="action-btn" onclick="openAccessModal()">
                     <i class="fas fa-users"></i> Manage Access
                 </button>
             </div>
@@ -107,6 +107,69 @@
                     </button>
                 </div>
             {% endif %}
+        </div>
+        <div id="accessModal" class="modal access-modal">
+            <div class="modal-content large-modal">
+                <span class="close" onclick="closeAccessModal()">&times;</span>
+                <h2>Manage Realm Access</h2>
+                
+                <div class="permissions-section">
+                    <h3>Current Permissions</h3>
+                    
+                    <div class="permission-group">
+                        <h4>Owner</h4>
+                        <div class="user-list">
+                            <span class="user-badge owner">{{ get_user_by_id(realm.permissions['owner'][0]).username }}</span>
+
+                        </div>
+                    </div>
+                    
+                    <div class="permission-group">
+                        <h4>Admins</h4>
+                        <div class="user-list">
+                            {% for admin_id in realm.permissions['editor'] %}
+                                <div class="user-badge admin">
+                                    {{ get_user_by_id(admin_id).username }}
+                                    <button class="remove-user" onclick="removeUser('{{ get_user_by_id(admin_id).username }}', 'admin')">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="permission-group">
+                        <h4>View-Only</h4>
+                        <div class="user-list">
+                            {% for viewer_id in realm.permissions['viewer'] %}
+                                <div class="user-badge viewer">
+                                    {{ get_user_by_id(viewer_id).username }}
+                                    <button class="remove-user" onclick="removeUser('{{ get_user_by_id(viewer_id).username }}', 'viewer')">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="add-permission-section">
+                    <h3>Add Permission</h3>
+                    <form id="addPermissionForm" onsubmit="addNewPermission(event)">
+                        <div class="form-group">
+                            <input type="text" id="username" placeholder="Enter username" required>
+                            <select id="permissionLevel" required>
+                                <option value="">Select permission level...</option>
+                                <option value="admin">Admin</option>
+                                <option value="viewer">Viewer</option>
+                            </select>
+                            <button type="submit" class="add-permission-btn">
+                                <i class="fas fa-plus"></i> Add User
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 

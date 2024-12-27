@@ -1,10 +1,13 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from database.models.user import db, User
+from utils.forms import RegistrationForm
+
 
 register_bp = Blueprint('register', __name__)
 
 @register_bp.route('/register', methods=['GET', 'POST'])
 def register():
+    form = RegistrationForm()  # Your form class
     if request.method == 'POST':
         username = request.form.get('username')
         email = request.form.get('email')
@@ -26,4 +29,4 @@ def register():
         
         return redirect(url_for('login.login'))
         
-    return render_template('auth_menu/register.html')
+    return render_template('auth_menu/register.html', form=form)

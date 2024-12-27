@@ -3,6 +3,7 @@ from routes.auth.login import check_session_expired
 from database.models.realm import Realm
 from database.models.node import Node
 from database.db_manager import db
+from utils.user_helpers import get_user_by_id
 
 realms_bp = Blueprint('realms', __name__)
 
@@ -35,7 +36,7 @@ def view_realm(identifier):
     # Fetch the actual Node objects using the stored UUIDs
     nodes = Node.query.filter(Node.realms_listed.contains([realm.uid])).all()
     print(nodes)
-    return render_template('realms/view_realm.html', realm=realm, nodes=nodes)
+    return render_template('realms/view_realm.html', realm=realm, nodes=nodes,get_user_by_id=get_user_by_id)
 
 @realms_bp.route('/realms/create', methods=['POST'])
 @check_session_expired

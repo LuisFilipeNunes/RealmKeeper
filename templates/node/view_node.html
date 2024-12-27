@@ -9,6 +9,7 @@
 {% block scripts %}
 
 <script src="{{ url_for('static', filename='js/node_script.js') }}"></script>
+<!-- The token management must be done here, not in the static script. Well, thats life. -->
 <script>
 const token = "{{ csrf_token() }}";
 document.getElementById('saveChanges').addEventListener('click', async () => {
@@ -122,7 +123,7 @@ document.getElementById('saveChanges').addEventListener('click', async () => {
         {% endif %}
     </div>
 </div>
-<button class="action-btn" style="padding: 8px 16px;" onclick="window.location.href='{{ url_for('realms.view_realm', identifier=realm_id) }}'>
+<button class="action-btn" style="padding: 8px 16px;" onclick="window.location.href='{{ url_for('realms.view_realm', identifier=realm_id) }}'">
     <i class="fas fa-arrow-left"></i> Back to Realm
 </button>
 <div id="permissionsModal" class="modal">

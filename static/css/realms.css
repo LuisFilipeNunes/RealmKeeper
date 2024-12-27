@@ -760,3 +760,118 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.access-modal {
+    display: none;
+}
+
+.large-modal {
+    width: 80%;
+    max-width: 900px;
+}
+
+.permissions-section {
+    margin-bottom: 2rem;
+}
+
+.permission-group {
+    margin: 1rem 0;
+}
+
+.user-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.user-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-badge.owner {
+    background-color: #4e046b;
+}
+
+.user-badge.admin {
+    background-color: #90caf9;
+}
+
+.user-badge.viewer {
+    background-color: #a5d6a7;
+}
+
+.remove-user {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #666;
+}
+
+.remove-user:hover {
+    color: #ff0000;
+}
+
+.add-permission-section {
+    border-top: 1px solid #ddd;
+    padding-top: 1rem;
+}
+
+.add-permission-section .form-group {
+    display: flex;
+    gap: 1rem;
+}
+
+.add-permission-btn {
+    padding: 0.5rem 1rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.notification {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    color: white;
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.error {
+    background-color: #f44336;
+}
+
+.notification.success {
+    background-color: #4CAF50;
+}
+
+.notification.warning {
+    background-color: #ff9800;
+}
+
+.notification i {
+    font-size: 18px;
+}
