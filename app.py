@@ -1,8 +1,7 @@
 from flask import Flask
 from database.db_manager import db, init_db
-from routes.landing import landing_bp
-from routes.login import login_bp
-from routes.register import register_bp
+from routes.auth import landing_bp, register_bp, login_bp
+from routes.realms import realms_bp
 import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -25,6 +24,7 @@ with app.app_context():
 app.register_blueprint(landing_bp)
 app.register_blueprint(login_bp)
 app.register_blueprint(register_bp)
+app.register_blueprint(realms_bp)
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10450, debug=True)
     

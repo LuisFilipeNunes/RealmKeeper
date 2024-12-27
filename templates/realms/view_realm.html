@@ -1,0 +1,266 @@
+{% extends "realms/base_realms.html" %}
+
+{% block title %}{{ realm.name }}{% endblock %}
+{% block scripts %}
+
+<script>
+    document.getElementById('openNodeModalButton').addEventListener('click', function() {
+        document.getElementById('nodeModal').style.display = 'block';
+    });
+    document.getElementById('openNodeModalButton').addEventListener('click', function() {
+        document.getElementById('nodeModal').style.display = 'block';
+    });
+    document.querySelector('.close').addEventListener('click', function() {
+        document.getElementById('nodeModal').style.display = 'none';
+    });
+
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('nodeModal')) {
+            document.getElementById('nodeModal').style.display = 'none';
+        }
+    };
+
+    const filterHandlers = {
+        '#annotations': 'lore',
+        '#persons': 'person',
+        '#artifacts': 'item',
+        '#locations': 'place'
+    };
+
+    Object.entries(filterHandlers).forEach(([selector, nodeType]) => {
+        document.querySelector(`a[href="${selector}"]`).addEventListener('click', function(e) {
+            e.preventDefault();
+            const menuItem = this.parentElement;
+
+            if (menuItem.classList.contains('selected')) {
+                menuItem.classList.remove('selected');
+                const nodeCards = document.querySelectorAll('.node-card');
+                nodeCards.forEach(card => {
+                    card.style.display = 'block';
+                });
+                // Remove no results message if it exists
+                const noResults = document.querySelector('.no-results');
+                if (noResults) noResults.remove();
+            } else {
+                document.querySelectorAll('.menu-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                
+                menuItem.classList.add('selected');
+                const nodeCards = document.querySelectorAll('.node-card');
+                let hasVisibleCards = false;
+                
+                nodeCards.forEach(card => {
+                    const cardType = card.querySelector('.node-type').textContent;
+                    if (cardType.toLowerCase() === nodeType) {
+                        card.style.display = 'block';
+                        hasVisibleCards = true;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                // Show/hide no results message
+                let noResults = document.querySelector('.no-results');
+                if (!hasVisibleCards) {
+                    if (!noResults) {
+                        noResults = document.createElement('div');
+                        noResults.className = 'no-results empty-realm';
+                        noResults.innerHTML = `
+                            <i class="fas fa-search fa-4x"></i>
+                            <h2>No content found</h2>
+                            <p>There are no entries for this category yet.</p>
+                        `;
+                        document.querySelector('.nodes-grid').appendChild(noResults);
+                    }
+                } else if (noResults) {
+                    noResults.remove();
+                }
+            }
+        });
+    });
+    const menuToggle = document.querySelector('.menu-toggle');
+    const sideMenu = document.querySelector('.side-menu');
+    const mainContent = document.querySelector('.main-content');
+    
+    menuToggle.addEventListener('click', () => {
+        sideMenu.classList.toggle('collapsed');
+        mainContent.classList.toggle('expanded');
+        
+        // Toggle the arrow icon
+        const icon = menuToggle.querySelector('i');
+        if (icon.classList.contains('fa-chevron-left')) {
+            icon.classList.replace('fa-chevron-left', 'fa-chevron-right');
+        } else {
+            icon.classList.replace('fa-chevron-right', 'fa-chevron-left');
+        }
+    });
+</script>
+
+{% endblock %}
+
+
+{% block realm_content %}
+
+
+<div class="realm-view">
+    <div class="side-menu">
+       
+        <nav class="realm-navigation">
+            
+            <ul class="menu-list">
+                <li class="menu-item">
+                    <a href="#annotations">
+                        <i class="fas fa-book-open"></i>
+                        Annotations
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#persons">
+                        <i class="fas fa-users"></i>
+                        Persons of Interest
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#artifacts">
+                        <i class="fas fa-gem"></i>
+                        Artifacts of Power
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#locations">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Locations of Interest
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#documents">
+                        <i class="fas fa-scroll"></i>
+                        Maps and Documents
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#linked-map">
+                        <i class="fas fa-project-diagram"></i>
+                        Map of Linked Annotations
+                    </a>
+                </li>
+                
+            </ul>
+        </nav>
+    </div>
+    <button class="menu-toggle">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    <div class="main-content">
+        <div class="realm-header">
+            <div class="realm-title">
+                <h1>{{ realm.name }}</h1>
+                <p class="realm-description">{{ realm.description }}</p>
+            </div>
+            <div class="realm-actions">
+                <button class="action-btn" id="openNodeModalButton">
+                    <i class="fas fa-plus"></i> Add Content
+                </button>
+                <button class="action-btn">
+                    <i class="fas fa-users"></i> Manage Access
+                </button>
+            </div>
+        </div>
+        <div class="content-wrapper">
+            {% if nodes %}
+                <div class="nodes-grid">
+                    {% for node in nodes %}
+                    <div class="node-card">
+                        <div class="node-info">
+                            <h3>{{ node.name }}</h3>
+                            <span class="node-type">{{ node.type }}</span>
+                            <p>{{ node.description }}</p>
+                        </div>
+                        <div class="node-actions">
+                            <button class="action-btn">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-link"></i> Link
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-realm">
+                    <i class="fas fa-scroll fa-4x"></i>
+                    <h2>This realm is empty</h2>
+                    <p>Start adding content to bring your realm to life!</p>
+                    <button id="openNodeModalButton" class="create-content-btn">
+                        <i class="fas fa-plus"></i> Create First Content
+                    </button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div id="nodeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeNodeModal()">&times;</span>
+            <h2>Create New Content</h2>
+            <form id="nodeForm" action="{{ url_for('realms.create_node', realm_id=realm.uid) }}" method="POST">
+                <div class="form-group">
+                    <label for="nodeType">Type</label>
+                    <select id="nodeType" name="type" onchange="toggleNodeFields()" required>
+                        <option value="">Select type...</option>
+                        <option value="lore">Lore</option>
+                        <option value="item">Item</option>
+                        <option value="person">Person</option>
+                        <option value="place">Place</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="nodeName">Name</label>
+                    <input type="text" id="nodeName" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="nodeDescription">Description</label>
+                    <textarea id="nodeDescription" name="description" required></textarea>
+                </div>
+                
+                <!-- Dynamic fields based on type -->
+                <div id="loreFields" class="type-specific-fields" style="display: none;">
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="major"> Major Lore Piece
+                        </label>
+                    </div>
+                </div>
+                
+                <div id="itemFields" class="type-specific-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="currentHolder">Current Holder</label>
+                        <input type="text" id="currentHolder" name="current">
+                    </div>
+                </div>
+                
+                <div id="personFields" class="type-specific-fields" style="display: none;">
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="is_player"> Player Character
+                        </label>
+                    </div>
+                    <div class="form-group player-field" style="display: none;">
+                        <label for="playerUUID">Player UUID</label>
+                        <input type="text" id="playerUUID" name="player_uuid">
+                    </div>
+                </div>
+                
+                <button type="submit" class="create-node-submit">Create</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+

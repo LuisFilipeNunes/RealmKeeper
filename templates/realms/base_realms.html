@@ -1,0 +1,45 @@
+{% extends "auth_menu/base.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/realms.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}
+{% block scripts %}
+
+{% endblock %}
+
+{% block navigation %}
+    <nav class="top-nav">
+        <div class="user-menu">
+            <div class="username-dropdown">
+                <span class="username">{{ session['username'] }} </span>
+                <div class="dropdown-content">
+                    <a href="{{ url_for('login.logout') }}" class="logout-option">
+                        <i class="fas fa-sign-out-alt"></i> Log Out
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="nav-menu">
+            <a href="{{ url_for('realms.realms') }}" class="nav-item {% if request.endpoint == 'login.realms' %}active{% endif %}">
+                <i class="fas fa-globe"></i> Realms
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-envelope"></i> Messages
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-user"></i> Profile
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="realm-container">
+        {% block realm_content %}{% endblock %}
+    </div>
+{% endblock %}
+

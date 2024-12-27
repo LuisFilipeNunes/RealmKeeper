@@ -1,0 +1,75 @@
+{% extends "realms/base_realms.html" %}
+
+{% block title %}Your Realms{% endblock %}
+
+{% block realm_content %}
+<div class="realms-wrapper">
+    <div class="realms-header">
+        <h1>Your Realms</h1>
+        {% if realms %}
+        <button class="create-realm-btn" onclick="openRealmModal()">
+            <i class="fas fa-plus"></i> New Realm
+        </button>
+        {% endif %}
+    </div>
+
+    <div class="realms-grid">
+        {% if realms %}
+            {% for realm in realms %}
+                <div class="realm-card">
+                    <div class="realm-info">
+                        <h3>{{ realm.name }}</h3>
+                        <p>{{ realm.description }}</p>
+                    </div>
+                    <div class="realm-actions">
+                        <button onclick="window.location.href='{{ url_for('realms.view_realm', identifier=realm.uid) }}'" class="enter-realm-btn">Enter</button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-realms">
+                <i class="fas fa-globe fa-4x"></i>
+                <h2>Let's create your first realm!</h2>
+                <button class="create-first-realm-btn" onclick="openRealmModal()">
+                    <i class="fas fa-plus"></i> Create Realm
+                </button>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Realm Creation Modal -->
+<div id="realmModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeRealmModal()">&times;</span>
+        <h2>Create New Realm</h2>
+        <form id="realmForm" action="{{ url_for('realms.create_realm') }}" method="POST">
+            <div class="form-group">
+                <label for="realmName">Realm Name</label>
+                <input type="text" id="realmName" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="realmDescription">Description</label>
+                <textarea id="realmDescription" name="description" required></textarea>
+            </div>
+            <button type="submit" class="create-realm-submit">Create Realm</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function openRealmModal() {
+    document.getElementById('realmModal').style.display = 'block';
+}
+
+function closeRealmModal() {
+    document.getElementById('realmModal').style.display = 'none';
+}
+
+window.onclick = function(event) {
+    if (event.target == document.getElementById('realmModal')) {
+        closeRealmModal();
+    }
+}
+</script>
+{% endblock %}
