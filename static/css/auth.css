@@ -9,7 +9,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(45deg, #0984e3, #00b894);
+    background: linear-gradient(90deg,#063041 35%, #BB4C1D);
     padding: 2rem;
     margin: 0;
 }
@@ -42,7 +42,7 @@ body {
 .form-group input {
     width: 100%;
     padding: 12px;
-    border: 2px solid #e0e0e0;
+    border: 2px solid #FBF8EF;
     border-radius: 8px;
     font-size: 1rem;
     transition: border-color 0.3s ease;
@@ -55,8 +55,8 @@ body {
 }
 
 .auth-button {
-    background: linear-gradient(45deg, #0984e3, #00b894);
-    color: white;
+    background: linear-gradient(#BB4C1D, #126175 60%);
+    color: #FBF8EF;
     padding: 12px;
     border: none;
     border-radius: 8px;
@@ -79,13 +79,13 @@ body {
 }
 
 .auth-link a {
-    color: #0984e3;
+    color: #005F73;
     text-decoration: none;
     font-weight: 600;
 }
 
 .auth-link a:hover {
-    color: #00b894;
+    color: #0A9396;
 }
 
 .flash-error {

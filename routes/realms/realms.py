@@ -1,9 +1,11 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, session
+from flask import Blueprint, render_template, request, flash, redirect, url_for, session, jsonify
 from routes.auth.login import check_session_expired
 from database.models.realm import Realm
 from database.models.node import Node
+from database.models.user import User
 from database.db_manager import db
 from utils.user_helpers import get_user_by_id
+from sqlalchemy.orm.attributes import flag_modified
 
 realms_bp = Blueprint('realms', __name__)
 
@@ -92,3 +94,72 @@ def create_node(realm_id):
     return redirect(url_for('realms.view_realm', identifier=realm_id))
 
 
+@realms_bp.route('/realms/<realm_id>/permissions', methods=['GET', 'POST', 'DELETE'])
+@check_session_expired
+def manage_realm_permission(realm_id):
+    current_user_id = session.get('user_id')
+    realm = get_realm_or_404(realm_id)
+    if isinstance(realm, tuple):  # Error response
+        return realm
+
+    if request.method == 'GET':
+        editors = User.query.filter(User.id.in_(realm.permissions['editor'])).all()
+        viewers = User.query.filter(User.id.in_(realm.permissions['viewer'])).all()
+        return jsonify({
+            'editors': [{'username': editor.username, 'id': editor.id} for editor in editors],
+            'viewers': [{'username': viewer.username, 'id': viewer.id} for viewer in viewers]
+        })
+
+    data = request.get_json()
+    username = data.get('username')
+    permission_level = data.get('permission_level') if request.method == 'POST' else data.get('role')
+
+    if not username or not permission_level:
+        return jsonify({'message': 'Invalid request data'}), 400
+
+    permission_error = check_permission(realm, current_user_id, role='owner')
+    if permission_error:
+        return permission_error
+
+    user = get_user_or_404(username)
+    if isinstance(user, tuple):  # Error response
+        return user
+
+    user_list_key = 'editor' if permission_level == 'admin' else 'viewer'
+
+    if request.method == 'POST':
+        if user.id in realm.permissions[user_list_key]:
+            return jsonify({'message': 'User already at this level'}), 400
+        realm.permissions[user_list_key].append(user.id)
+
+    elif request.method == 'DELETE':
+        if user.id not in realm.permissions[user_list_key]:
+            return jsonify({'message': 'User does not have this level'}), 400
+        realm.permissions[user_list_key].remove(user.id)
+
+    flag_modified(realm, "permissions")
+    db.session.add(realm)
+    db.session.commit()
+    action = 'added' if request.method == 'POST' else 'removed'
+    return jsonify({'message': f'Permission {action} successfully'}), 200
+
+
+def get_realm_or_404(realm_id):
+    """Retrieve realm by ID or return a 404 error."""
+    realm = Realm.query.filter_by(uid=realm_id).first()
+    if not realm:
+        return jsonify({'message': 'Realm not found'}), 404
+    return realm
+
+def get_user_or_404(username):
+    """Retrieve user by username or return a 404 error."""
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+    return user
+
+def check_permission(realm, current_user_id, role='owner'):
+    """Check if the current user has the required permissions."""
+    if current_user_id not in realm.permissions.get(role, []):
+        return jsonify({'message': 'You do not have permission'}), 403
+    return None

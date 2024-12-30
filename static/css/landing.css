@@ -7,8 +7,8 @@ body {
 .landing-container {
     width: 100%;
     min-height: 100vh;
-    background: linear-gradient(45deg, #0984e3, #00b894);
-    color: white;
+    background: linear-gradient(90deg,#063041 35%, #BB4C1D);
+    color: #FBF8EF;
 }
 
 .content-wrapper {
@@ -27,8 +27,10 @@ body {
 /* Update text colors for better contrast */
 .main-title,
 .section-title,
+
+.p,
 .feature-box h3 {
-    color: white;
+    color: #FBF8EF;
 }
 .hero-section {
     text-align: center;
@@ -71,6 +73,7 @@ body {
     box-shadow: 0 10px 20px rgba(0,0,0,0.05);
     text-align: center;
     transition: transform 0.3s ease;
+    box-shadow: 0vmin 0.5vmin 1vmin rgba(0, 0, 0, 0.2);
 }
 
 .feature-box:hover {
@@ -99,14 +102,14 @@ body {
 .login-button {
     display: inline-block;
     padding: 1rem 3rem;
-    background: linear-gradient(45deg, #0984e3, #00b894);
-    color: white;
+    background: linear-gradient(#BB4C1D, #126175 60%);
+    color: #FBF8EF;
     text-decoration: none;
     border-radius: 50px;
     font-weight: 600;
     font-size: 1.1rem;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 5px 15px rgba(9, 132, 227, 0.3);
+    /* box-shadow: 0 5px 15px rgba(9, 132, 227, 0.3); */
 }
 
 .login-button:hover {
@@ -116,22 +119,22 @@ body {
 
 .sub-text {
     margin-top: 1.5rem;
-    color: #e0ffff;
+    color: #FBF8EF;
 }
 
 .register-link {
-    color: #5ef3d5;
+    color: #A94A0F;
     text-decoration: none;
     font-weight: 600;
     transition: color 0.3s ease;
 }
 
 .register-link:hover {
-    color: #00b894;
+    color: #FA9537;
 }
 .hero-subtitle,
 .feature-box p {
-    color: rgba(255, 255, 255, 0.9);
+    color: #FBF8EF;
 }
 .nav-controls {
     position: absolute;

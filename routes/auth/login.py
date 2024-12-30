@@ -1,10 +1,13 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
+from flask_wtf.csrf import CSRFProtect
 from datetime import timedelta, datetime
 from database.models.user import User
 from database.db_manager import db
 from functools import wraps
 
 login_bp = Blueprint('login', __name__)
+
+csrf = CSRFProtect()
 
 def check_session_expired(f):
     @wraps(f)
@@ -33,8 +36,8 @@ def login():
             db.session.commit()
             
             return redirect(url_for('landing.landing'))
-        else:
-            flash('Invalid username or password', 'error')
+        
+        flash('Invalid username or password', 'error')
             
     return render_template('auth_menu/login.html')
 

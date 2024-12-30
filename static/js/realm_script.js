@@ -1,3 +1,15 @@
+const realmId = document.querySelector('[data-realm-id]').dataset.realmId;
+const menuToggle = document.querySelector('.menu-toggle');
+const sideMenu = document.querySelector('.side-menu');
+const mainContent = document.querySelector('.main-content');
+const filterHandlers = {
+    '#annotations': 'lore',
+    '#persons': 'person',
+    '#artifacts': 'item',
+    '#locations': 'place'
+};
+
+
 document.getElementById('openNodeModalButton').addEventListener('click', function() {
     document.getElementById('nodeModal').style.display = 'block';
 });
@@ -9,13 +21,6 @@ window.onclick = function(event) {
     if (event.target == document.getElementById('nodeModal')) {
         document.getElementById('nodeModal').style.display = 'none';
     }
-};
-
-const filterHandlers = {
-    '#annotations': 'lore',
-    '#persons': 'person',
-    '#artifacts': 'item',
-    '#locations': 'place'
 };
 
 Object.entries(filterHandlers).forEach(([selector, nodeType]) => {
@@ -69,10 +74,6 @@ Object.entries(filterHandlers).forEach(([selector, nodeType]) => {
     });
 });
 
-const menuToggle = document.querySelector('.menu-toggle');
-const sideMenu = document.querySelector('.side-menu');
-const mainContent = document.querySelector('.main-content');
-
 menuToggle.addEventListener('click', () => {
     sideMenu.classList.toggle('collapsed');
     mainContent.classList.toggle('expanded');
@@ -85,7 +86,6 @@ menuToggle.addEventListener('click', () => {
     }
 });
 
-
 function openAccessModal() {
     document.getElementById('accessModal').style.display = 'block';
 }
@@ -94,66 +94,186 @@ function closeAccessModal() {
     document.getElementById('accessModal').style.display = 'none';
 }
 
+function closeNodeModal() {
+    document.getElementById('nodeModal').style.display = 'none';
+}
+
 async function addNewPermission(event) {
     event.preventDefault();
     const username = document.getElementById('username').value;
     const permissionLevel = document.getElementById('permissionLevel').value;
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
     
     try {
-        const response = await fetch(`/api/realms/${realmId}/permissions`, {
+        const response = await fetch(`/realms/${realmId}/permissions`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
             },
             body: JSON.stringify({
                 username: username,
                 permission_level: permissionLevel
             })
         });
-        
-        if (!response.ok) {
-            const error = await response.json();
-            showNotification(error.message, 'error');
-            return;
+        console.log('Response status:', response.status);
+        const data = await response.json();
+        console.log('Response data:', data);
+        if (response.ok) {
+            // Clear the form inputs
+            document.getElementById('username').value = '';
+            document.getElementById('permissionLevel').value = '';
+            
+            // Fetch and update the permissions list
+            const permissionsResponse = await fetch(`/realms/${realmId}/permissions`);
+            console.log('Permissions response:', permissionsResponse);
+            const permissionsData = await permissionsResponse.json();
+            console.log('Permissions data:', permissionsData);
+            // Update the permissions list in the modal
+            // const permissionsList = document.querySelector('.permissions-list');
+            const editorsList = document.querySelector('.admin-user-list');
+            const viewersList = document.querySelector('.viewer-user-list');
+            
+            editorsList.innerHTML = '';
+            viewersList.innerHTML = '';
+
+            // Add editors (admins)
+            permissionsData.editors.forEach(editor => {
+                const editorItem = document.createElement('div');
+                editorItem.className = 'user-badge admin';
+                editorItem.innerHTML = `
+
+                    ${editor.username}
+                    <button class="remove-user" onclick="removeUser('${editor.username}', 'admin')">
+                        <i class="fas fa-times"></i>
+                    </button>
+
+                    
+                `;
+                editorsList.appendChild(editorItem);
+            });
+
+            // Add viewers
+            permissionsData.viewers.forEach(viewer => {
+                const viewerItem = document.createElement('div');
+                viewerItem.className = 'user-badge viewer';
+                viewerItem.innerHTML = `
+
+                    ${viewer.username}
+                    <button class="remove-user" onclick="removeUser('${viewer.username}', 'viewer')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                viewersList.appendChild(viewerItem);
+            });
+            
+            showNotification(data.message, 'success');
+        } else {
+            showNotification(data.message, 'error');
         }
         
-        // Refresh the permissions display
-        location.reload();
-        
     } catch (error) {
+        console.error('Error:', error);
         showNotification('Failed to add permission', 'error');
     }
 }
 
 async function removeUser(username, role) {
-    if (!confirm(`Are you sure you want to remove ${username}'s ${role} access?`)) {
-        return;
-    }
+    const modal = document.getElementById('confirmationModal');
+    const confirmMessage = document.getElementById('confirmationMessage');
+    const confirmBtn = document.getElementById('confirmRemoveBtn');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
     
-    try {
-        const response = await fetch(`/api/realms/${realmId}/permissions`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: username,
-                role: role
-            })
-        });
+    confirmMessage.textContent = `Are you sure you want to remove ${username}'s ${role} access?`;
+    modal.style.display = 'block';
+    
+    return new Promise((resolve) => {
+        confirmBtn.onclick = async () => {
+            modal.style.display = 'none';
+            
+            try {
+                const response = await fetch(`/realms/${realmId}/permissions`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        role: role
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    showNotification(data.message, 'error');
+                    return;
+                }
+
+                // Fetch and update the permissions list
+                const permissionsResponse = await fetch(`/realms/${realmId}/permissions`);
+                const permissionsData = await permissionsResponse.json();
+                
+                // Update the lists in the modal
+                const adminList = document.getElementById('accessModal').querySelector('.admin-user-list');
+                const viewerList = document.getElementById('accessModal').querySelector('.viewer-user-list');
+                
+                adminList.innerHTML = '';
+                viewerList.innerHTML = '';
+
+                // Add editors
+                permissionsData.editors.forEach(editor => {
+                    const editorItem = document.createElement('div');
+                    editorItem.className = 'user-badge admin';
+                    editorItem.innerHTML = `
+                        ${editor.username}
+                        <button class="remove-user" onclick="removeUser('${editor.username}', 'admin')">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    adminList.appendChild(editorItem);
+                });
+
+                // Add viewers
+                permissionsData.viewers.forEach(viewer => {
+                    const viewerItem = document.createElement('div');
+                    viewerItem.className = 'user-badge viewer';
+                    viewerItem.innerHTML = `
+                        ${viewer.username}
+                        <button class="remove-user" onclick="removeUser('${viewer.username}', 'viewer')">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    viewerList.appendChild(viewerItem);
+                });
+                
+                showNotification(data.message, 'success');
+                
+            } catch (error) {
+                showNotification('Failed to remove user', 'error');
+            }
+            resolve(true);
+        };
         
-        if (!response.ok) {
-            const error = await response.json();
-            showNotification(error.message, 'error');
-            return;
-        }
+        document.querySelector('#confirmationModal .close').onclick = () => {
+            modal.style.display = 'none';
+            resolve(false);
+        };
         
-        // Refresh the permissions display
-        location.reload();
-        
-    } catch (error) {
-        showNotification('Failed to remove user', 'error');
-    }
+        window.onclick = (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                resolve(false);
+            }
+        };
+    });
+}
+
+
+
+function closeConfirmationModal() {
+    document.getElementById('confirmationModal').style.display = 'none';
 }
 
 function showNotification(message, type) {

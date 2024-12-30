@@ -2,6 +2,11 @@
 
 {% block title %}Login{% endblock %}
 
+{% block scripts %}
+
+{{ csrf_token() }}
+{% endblock %}
+
 {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
 {% endblock %}
@@ -18,6 +23,7 @@
             {% endif %}
         {% endwith %}
         <form method="POST" class="auth-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="form-group">
                 <input type="text" name="username" placeholder="Username" required>
             </div>

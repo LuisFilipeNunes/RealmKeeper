@@ -21,6 +21,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{database_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 init_db(app)
+csrf = CSRFProtect(app)
+
 
 with app.app_context():
     db.create_all()
