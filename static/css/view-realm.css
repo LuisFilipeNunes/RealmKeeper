@@ -1,0 +1,266 @@
+/* Variables */
+:root {
+    --dark-spring-green: #226f54ff;
+    --floral-white: #fbf8efff;
+    --rich-black: #031c25ff;
+    --off-dark-spring-green: rgb(28, 92, 70);
+}
+
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--floral-white);
+    color: var(--rich-black);
+}
+
+h1, h2, h3 {
+    color: var(--rich-black);
+}
+
+button {
+    font-family: inherit;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Realm View Wrapper */
+.realm-view {
+    display: flex;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    height: calc(100vh - var(--navbar-height));
+    background-color: var(--dark-spring-green);
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    position: relative;
+}
+
+/* Side Menu */
+.side-menu {
+    width: 250px;
+    min-width: 250px;
+    background-color: var(--off-dark-spring-green);
+    transition: all 0.3s ease;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.realm-navigation {
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu-item {
+    margin-bottom: 1rem;
+}
+
+.menu-item a {
+    text-decoration: none;
+    font-size: 1.2rem;
+    color: var(--rich-black);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.menu-item a:hover {
+    background-color: var(--dark-spring-green);
+    color: var(--floral-white);
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    margin-left: 20px;
+    padding: 1.5rem;
+    background-color: var(--floral-white);
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.realm-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.realm-title h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+    color: var(--rich-black);
+}
+
+.realm-description {
+    font-size: 1rem;
+    color: var(--dark-spring-green);
+}
+
+.realm-actions .action-btn {
+    background-color: var(--dark-spring-green);
+    color: var(--floral-white);
+    padding: 0.8rem 1.5rem;
+    margin-left: 1rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.realm-actions .action-btn:hover {
+    background-color: var(--floral-white);
+    color: var(--dark-spring-green);
+}
+
+/* Node Cards */
+.nodes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.node-card {
+    background-color: var(--floral-white);
+    border: 1px solid var(--dark-spring-green);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.node-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.node-info h3 {
+    font-size: 1.5rem;
+    color: var(--rich-black);
+    margin-bottom: 0.5rem;
+}
+
+.node-info .node-type {
+    font-size: 1rem;
+    color: var(--dark-spring-green);
+    margin-bottom: 1rem;
+}
+
+.node-actions .action-btn {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+/* Empty Realm Section */
+.empty-realm {
+    text-align: center;
+    padding: 3rem;
+    color: var(--rich-black);
+}
+
+.empty-realm i {
+    color: var(--dark-spring-green);
+    margin-bottom: 1.5rem;
+}
+
+.empty-realm h2 {
+    font-size: 1.8rem;
+    margin: 1.5rem 0;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    overflow: auto;
+}
+
+.modal-content {
+    background-color: var(--floral-white);
+    margin: 5% auto;
+    padding: 2rem;
+    width: 40%;
+    max-width: 600px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Utility */
+.menu-toggle {
+    position: fixed;
+    left: 250px;
+    background: var(--off-dark-spring-green);
+    color: white;
+    padding: 1rem 0.5rem;
+    border-radius: 0 8px 8px 0;
+    transition: left 0.3s ease;
+    z-index: 100;
+}
+
+.menu-toggle:hover {
+    background-color: var(--floral-white);
+    color: var(--dark-spring-green);
+}
+
+.side-menu, .main-content {
+    transition: all 0.3s ease;
+}
+
+.side-menu.collapsed ~ .menu-toggle {
+    transform: translateX(-250px);
+    background-color: var(--off-dark-spring-green);
+}
+
+.side-menu.collapsed {
+    transform: translateX(-100%);
+}
+
+.side-menu {
+    position: fixed;
+    left: 0;
+    top: var(--navbar-height);
+    height: calc(100vh - var(--navbar-height));
+    width: 250px;
+    background-color: var(--off-dark-spring-green);
+    padding: 20px 0;
+    color: white;
+    z-index: 100;
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+    border-top-right-radius: 0%;
+}
+
+.menu-toggle {
+    position: fixed;
+    left: 250px;
+    top: calc(var(--navbar-height) + 20px);
+    background: var(--off-dark-spring-green);
+    color: white;
+    border: none;
+    padding: 1rem 0.5rem;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    z-index: 999;
+    display: block;
+    transition: transform 0.3s ease;
+}

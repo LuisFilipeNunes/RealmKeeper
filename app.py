@@ -15,7 +15,7 @@ database_dir = os.path.dirname(database_path)
 if not os.path.exists(database_dir):
     os.makedirs(database_dir)
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 app.config['SECRET_KEY'] = 'your-super-secret-key'
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{database_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

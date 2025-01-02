@@ -1,0 +1,280 @@
+
+/* General Variables */
+:root {
+    --dark-spring-green: #226f54ff;
+    --floral-white: #fbf8efff;
+    --rich-black: #031c25ff;
+}
+  /* Global Styles */
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--floral-white);
+    color: var(--rich-black);
+    margin: 0;
+    padding: 0;
+  }
+  
+  h1, h2, h3 {
+    color: var(--rich-black);
+  }
+  
+  button {
+    font-family: inherit;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  
+  /* Enhanced Wrapper */
+.realms-wrapper {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background-color: var(--dark-spring-green);
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+  
+/* Refined Header */
+.realms-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    /* border-bottom: 2px solid var(--dark-spring-green); */
+}
+
+.realms-header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--rich-black);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced Realm Cards */
+.realms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 1rem 0;
+}
+
+.realm-card {
+    background-color: var(--floral-white);
+    border: 1px solid var(--dark-spring-green);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.realm-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.realm-info h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: var(--rich-black);
+}
+
+.realm-info p {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    color: var(--dark-spring-green);
+    margin-bottom: 1.5rem;
+}
+
+  
+  .realm-actions {
+    margin-top: 1rem;
+  }
+  
+  /* Enhanced Buttons */
+.create-realm-btn, .create-first-realm-btn {
+    background-color: var(--dark-spring-green);
+    color: var(--floral-white);
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.create-realm-btn:hover, .create-first-realm-btn:hover {
+    background-color: var(--floral-white);
+    color: var(--dark-spring-green);
+    transform: scale(1.05);
+}
+
+.enter-realm-btn {
+    width: 100%;
+    background-color: var(--dark-spring-green);
+    color: var(--floral-white);
+    padding: 0.8rem;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.enter-realm-btn:hover {
+    background-color: var(--floral-white);
+    color: var(--rich-black);
+    transform: scale(1.02);
+}
+  
+  /* No Realms Message */
+  .no-realms {
+    text-align: center;
+    color: var(--rich-black);
+  }
+  
+  .no-realms h2 {
+    margin: 1rem 0;
+  }
+  
+  /* Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  
+  /* Enhanced Modal */
+.modal-content {
+    background-color: var(--floral-white);
+    margin: 5% auto;
+    padding: 2.5rem;
+    border: 1px solid var(--dark-spring-green);
+    width: 40%;
+    max-width: 600px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 0.8rem;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid var(--dark-spring-green);
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: var(--dark-spring-green);
+}
+
+.create-realm-submit {
+    background-color: var(--dark-spring-green);
+    color: var(--floral-white);
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-top: 1rem;
+}
+  
+  .create-realm-submit:hover {
+    background-color: var(--dark-spring-green);
+  }
+  
+  .close {
+    float: right;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--dark-spring-green);
+    cursor: pointer;
+  }
+  
+  .close:hover {
+    color: var(--dark-spring-green);
+  }
+  
+
+  /* Enhanced No Realms Section */
+.no-realms {
+    text-align: center;
+    padding: 3rem;
+    color: var(--rich-black);
+}
+
+.no-realms i {
+    color: var(--dark-spring-green);
+    margin-bottom: 1.5rem;
+}
+
+.no-realms h2 {
+    font-size: 2rem;
+    margin: 1.5rem 0;
+}
+
+.notification-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.notification {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 20px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background-color: var(--floral-white);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateX(100%);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.notification.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.notification.success {
+  border-left: 4px solid var(--dark-spring-green);
+}
+
+.notification.error {
+  border-left: 4px solid #dc3545;
+}
+
+.notification i {
+  font-size: 1.2rem;
+}
+
+.notification.success i {
+  color: var(--dark-spring-green);
+}
+
+.notification.error i {
+  color: #dc3545;
+}

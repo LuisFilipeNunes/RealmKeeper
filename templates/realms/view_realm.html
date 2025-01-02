@@ -1,6 +1,15 @@
 {% extends "realms/base_realms.html" %}
 
 {% block title %}{{ realm.name }}{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/view-realm.css') }}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+{% endblock %}
+
 {% block scripts %}
 <script src="{{ url_for('static', filename='js/realm_script.js') }}"></script>
 
@@ -12,7 +21,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <div class="realm-view" data-realm-id="{{ realm.uid }}">
-    <div class="side-menu">
+    <div class="side-menu collapsed">
        
         <nav class="realm-navigation">
             
@@ -58,15 +67,18 @@
         </nav>
     </div>
     <button class="menu-toggle">
-        <i class="fas fa-chevron-left"></i>
+        <i class="fas fa-chevron-right"></i>
     </button>
-    <div class="main-content">
+    <div class="main-content expanded">
         <div class="realm-header">
             <div class="realm-title">
                 <h1>{{ realm.name }}</h1>
-                <p class="realm-description">{{ realm.description }}</p>
+                <p class="realm-description" contenteditable="true">{{ realm.description }}</p>
             </div>
             <div class="realm-actions">
+                <button class="action-btn" id="saveRealmChanges">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
                 <button class="action-btn" id="openNodeModalButton">
                     <i class="fas fa-plus"></i> Add Content
                 </button>

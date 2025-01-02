@@ -24,6 +24,8 @@ body {
     margin: 3rem 0;
 }
 
+
+
 /* Update text colors for better contrast */
 .main-title,
 .section-title,
@@ -114,7 +116,7 @@ body {
 
 .login-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(9, 132, 227, 0.4);
+    box-shadow: 0 8px 20px #005F73;
 }
 
 .sub-text {

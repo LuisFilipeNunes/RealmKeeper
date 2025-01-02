@@ -93,6 +93,23 @@ def create_node(realm_id):
     flash('Content created successfully!', 'success')
     return redirect(url_for('realms.view_realm', identifier=realm_id))
 
+@realms_bp.route('/realms/<realm_id>/update', methods=['POST'])
+def update_realm(realm_id):
+    print(realm_id)
+    realm = get_realm_or_404(realm_id)
+    current_user_id = session.get('user_id')
+    data = request.get_json()
+    description = data.get('description')
+    permission_error = check_permission(realm, current_user_id, role='owner')
+    if permission_error:
+        return permission_error
+    realm.description = description
+
+    flag_modified(realm, "description")
+    db.session.add(realm)
+    db.session.commit()
+    return jsonify({'message': 'Realm updated successfully'}), 200
+
 
 @realms_bp.route('/realms/<realm_id>/permissions', methods=['GET', 'POST', 'DELETE'])
 @check_session_expired

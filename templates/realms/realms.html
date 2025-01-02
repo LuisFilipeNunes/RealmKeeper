@@ -2,7 +2,28 @@
 
 {% block title %}Your Realms{% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/new.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+
+
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='b.svg') }}"); 
+            background-attachment: fixed;
+            background-size: cover;
+            background-color: rgba(255, 250, 240, 0.9); /* Floral white with 0.8 opacity */
+            background-position: center;
+            background-blend-mode: overlay;
+            /* filter: grayscale(100%); */
+            
+        }
+    </style>
+
+    {% endblock %}
+
 {% block realm_content %}
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="realms-wrapper">
     <div class="realms-header">
         <h1>Your Realms</h1>
@@ -44,6 +65,7 @@
         <span class="close" onclick="closeRealmModal()">&times;</span>
         <h2>Create New Realm</h2>
         <form id="realmForm" action="{{ url_for('realms.create_realm') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="form-group">
                 <label for="realmName">Realm Name</label>
                 <input type="text" id="realmName" name="name" required>

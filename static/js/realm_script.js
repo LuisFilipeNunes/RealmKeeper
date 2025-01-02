@@ -308,3 +308,63 @@ function showNotification(message, type) {
         setTimeout(() => notification.remove(), 300);
     }, 5000);
 }
+
+
+let hasUnsavedChanges = false;
+
+document.querySelector('.realm-title h1').addEventListener('input', () => {
+    hasUnsavedChanges = true;
+    document.getElementById('saveRealmChanges').classList.add('unsaved');
+});
+
+document.querySelector('.realm-description').addEventListener('input', () => {
+    hasUnsavedChanges = true;
+    document.getElementById('saveRealmChanges').classList.add('unsaved');
+});
+
+document.getElementById('saveRealmChanges').addEventListener('click', async () => {
+    if (!hasUnsavedChanges) return;
+
+    const realmData = {
+
+        description: document.querySelector('.realm-description').textContent.trim(),
+        realm_id: '{{ realm.uid }}'
+    };
+
+    try {
+        const response = await fetch('/realms/${realmId}/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': token
+            },
+            body: JSON.stringify(realmData)
+        });
+        
+        if (response.ok) {
+            hasUnsavedChanges = false;
+            document.getElementById('saveRealmChanges').classList.remove('unsaved');
+            const saveBtn = document.getElementById('saveRealmChanges');
+            saveBtn.innerHTML = '<i class="fas fa-check"></i> Saved';
+            
+            const notification = document.createElement('div');
+            notification.className = 'notification success';
+            notification.innerHTML = '<i class="fas fa-check-circle"></i> Realm updated successfully!';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+                notification.remove();
+            }, 2000);
+        }
+    } catch (error) {
+        const notification = document.createElement('div');
+        notification.className = 'notification error';
+        notification.innerHTML = '<i class="fas fa-exclamation-circle"></i> Failed to update realm';
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 2000);
+    }
+});
