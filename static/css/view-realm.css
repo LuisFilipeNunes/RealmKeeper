@@ -1,9 +1,41 @@
 /* Variables */
 :root {
-    --dark-spring-green: #226f54ff;
-    --floral-white: #fbf8efff;
-    --rich-black: #031c25ff;
-    --off-dark-spring-green: rgb(28, 92, 70);
+
+    /* Primary Color */
+    --dark-spring-green: #226F54;
+    /* Complimentary Color */
+    --claret: #6F223D;
+
+    /* Monochromatic adjust */
+    --up-spring-green: #2E9672;
+
+    /* Analogous adjust */
+        /* Left-end - Primary*/ 
+        /* Mid */ --caribbean-current: #22646F;
+        /* Right-end */ --up-space-cadet: #226F2D;
+
+    /* Tertiary Colors */
+        /* Left-end - Primary*/ 
+        /* Mid */ --tekhelet: #54226f;
+        /* Right-end */ --field-drab: #6f5422;
+
+    /* Tetradic Colors */
+        /* Left-bottom - Primary*/
+        /* Right-Top - Complimentary*/
+        /* Right-bottom */ --moss-green: #636f22;
+        /* Left-top */ --midnight-blue: #331cb3;
+
+    /* Whites */
+        /* First */ --floral-white: #fbf8efff;
+        /* Second */ --up-floral-white: rgb(253, 251, 246);
+
+    /* Black */
+        /* First */ --rich-black: #031c25ff;
+
+    /* Shades */
+        /* First */ --off-dark-spring-green: #1c5c46;
+
+        
 }
 
 /* General Styles */
@@ -33,9 +65,9 @@ button {
     margin: 2rem auto;
     padding: 2rem;
     height: calc(100vh - var(--navbar-height));
-    background-color: var(--dark-spring-green);
+    /* background-color: var(--dark-spring-green); */
     border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    /* box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); */
     position: relative;
 }
 
@@ -84,11 +116,16 @@ button {
 /* Main Content */
 .main-content {
     flex: 1;
-    margin-left: 20px;
+    margin-left: 220px;
     padding: 1.5rem;
     background-color: var(--floral-white);
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: margin-left 0.3s ease;
+}
+
+.main-content.expanded {
+    margin-left: 20px; /* Width of collapsed menu */
 }
 
 .realm-header {
@@ -102,7 +139,7 @@ button {
     font-size: 2rem;
     font-weight: bold;
     margin: 0;
-    color: var(--rich-black);
+    color: var(--off-dark-spring-green);
 }
 
 .realm-description {
@@ -123,8 +160,9 @@ button {
 }
 
 .realm-actions .action-btn:hover {
-    background-color: var(--floral-white);
-    color: var(--dark-spring-green);
+    background-color: var(--off-dark-spring-green);
+    color: var(--up-floral-white);
+
 }
 
 /* Node Cards */
@@ -135,8 +173,8 @@ button {
 }
 
 .node-card {
-    background-color: var(--floral-white);
-    border: 1px solid var(--dark-spring-green);
+    background-color: var(--dark-spring-green);
+    border: 1px solid var(--off-dark-spring-green);
     border-radius: 12px;
     padding: 1.5rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -150,8 +188,24 @@ button {
 
 .node-info h3 {
     font-size: 1.5rem;
-    color: var(--rich-black);
+    color: var(--floral-white);
     margin-bottom: 0.5rem;
+}
+
+.truncate-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.node-info p{
+    color: var(--floral-white)
+}
+
+.node-info truncate-text{
+    text-overflow: ellipsis;
 }
 
 .node-info .node-type {
@@ -182,29 +236,6 @@ button {
     margin: 1.5rem 0;
 }
 
-/* Modal */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    overflow: auto;
-}
-
-.modal-content {
-    background-color: var(--floral-white);
-    margin: 5% auto;
-    padding: 2rem;
-    width: 40%;
-    max-width: 600px;
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
 /* Utility */
 .menu-toggle {
     position: fixed;
@@ -222,7 +253,7 @@ button {
     color: var(--dark-spring-green);
 }
 
-.side-menu, .main-content {
+.side-menu {
     transition: all 0.3s ease;
 }
 
@@ -263,4 +294,45 @@ button {
     z-index: 999;
     display: block;
     transition: transform 0.3s ease;
+}
+
+
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.notification {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    color: white;
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.error {
+    background-color: #f44336;
+}
+
+.notification.success {
+    background-color: #4CAF50;
+}
+
+.notification.warning {
+    background-color: #ff9800;
+}
+
+.notification i {
+    font-size: 18px;
 }

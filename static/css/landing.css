@@ -1,3 +1,42 @@
+:root {
+
+    /* Primary Color */
+    --dark-spring-green: #226F54;
+    /* Complimentary Color */
+    --claret: #6F223D;
+
+    /* Monochromatic adjust */
+    --up-spring-green: #2E9672;
+
+    /* Analogous adjust */
+        /* Left-end - Primary*/ 
+        /* Mid */ --caribbean-current: #22646F;
+        /* Right-end */ --up-space-cadet: #226F2D;
+
+    /* Tertiary Colors */
+        /* Left-end - Primary*/ 
+        /* Mid */ --tekhelet: #54226f;
+        /* Right-end */ --field-drab: #6f5422;
+
+    /* Tetradic Colors */
+        /* Left-bottom - Primary*/
+        /* Right-Top - Complimentary*/
+        /* Right-bottom */ --moss-green: #636f22;
+        /* Left-top */ --midnight-blue: #331cb3;
+
+    /* Whites */
+        /* First */ --floral-white: #fbf8efff;
+        /* Second */ --up-floral-white: rgb(253, 251, 246);
+
+    /* Black */
+        /* First */ --rich-black: #031c25ff;
+
+    /* Shades */
+        /* First */ --off-dark-spring-green: #1c5c46;
+
+        
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -7,7 +46,7 @@ body {
 .landing-container {
     width: 100%;
     min-height: 100vh;
-    background: linear-gradient(90deg,#063041 35%, #BB4C1D);
+    background: linear-gradient(180deg, var(--up-space-cadet) 35%, var(--dark-spring-green));
     color: #FBF8EF;
 }
 
@@ -104,7 +143,7 @@ body {
 .login-button {
     display: inline-block;
     padding: 1rem 3rem;
-    background: linear-gradient(#BB4C1D, #126175 60%);
+    background: linear-gradient(180deg, var(--up-spring-green), var(--off-dark-spring-green) 60%);
     color: #FBF8EF;
     text-decoration: none;
     border-radius: 50px;
@@ -125,15 +164,16 @@ body {
 }
 
 .register-link {
-    color: #A94A0F;
+    color:var(--tekhelet);
     text-decoration: none;
     font-weight: 600;
     transition: color 0.3s ease;
 }
 
 .register-link:hover {
-    color: #FA9537;
+    color: var(--claret);
 }
+
 .hero-subtitle,
 .feature-box p {
     color: #FBF8EF;

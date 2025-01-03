@@ -5,9 +5,23 @@
 {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/view-realm.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manage-access-modal.css') }}">
+
+
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='b.svg') }}"); 
+            background-attachment: fixed;
+            background-size: cover;
+            background-color: rgba(255, 250, 240, 0.9); /* Floral white with 0.8 opacity */
+            background-position: center;
+            background-blend-mode: overlay;
+            /* filter: grayscale(100%); */
+            
+        }
+    </style>
 {% endblock %}
 
 {% block scripts %}
@@ -75,36 +89,34 @@
                 <h1>{{ realm.name }}</h1>
                 <p class="realm-description" contenteditable="true">{{ realm.description }}</p>
             </div>
+
             <div class="realm-actions">
                 <button class="action-btn" id="saveRealmChanges">
                     <i class="fas fa-save"></i> Save Changes
                 </button>
+
                 <button class="action-btn" id="openNodeModalButton">
                     <i class="fas fa-plus"></i> Add Content
                 </button>
+                
                 <button class="action-btn" onclick="openAccessModal()">
                     <i class="fas fa-users"></i> Manage Access
                 </button>
             </div>
+
         </div>
+
         <div class="content-wrapper">
             {% if nodes %}
                 <div class="nodes-grid">
                     {% for node in nodes %}
                     <div class="node-card">
                         <div class="node-info">
-                            <h3>{{ node.name }}</h3>
+                            <h3 onclick="window.location.href='{{ url_for('node.view_node', realm_id=realm.uid, node_id=node.uuid) }}'" style="cursor: pointer;">{{ node.name }}</h3>
                             <span class="node-type">{{ node.type }}</span>
                             <p class="truncate-text">{{ node.description }}</p>
                         </div>
                         <div class="node-actions">
-                            <button class="action-btn" onclick="window.location.href='{{ url_for('node.view_node', realm_id=realm.uid, node_id=node.uuid) }}'">
-
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                            <button class="action-btn">
-                                <i class="fas fa-link"></i> Link
-                            </button>
                         </div>
                     </div>
                     {% endfor %}
@@ -120,6 +132,7 @@
                 </div>
             {% endif %}
         </div>
+
         <div id="accessModal" class="modal access-modal">
             <div class="modal-content large-modal">
                 <span class="close" onclick="closeAccessModal()">&times;</span>
@@ -169,7 +182,7 @@
                     <h3>Add Permission</h3>
                     <form id="addPermissionForm" onsubmit="addNewPermission(event)">
                         <div class="form-group">
-                            <input type="text" id="username" placeholder="Enter username" required>
+                            <input type="text" id="username" placeholder="Enter username here..." required>
                             <select id="permissionLevel" required>
                                 <option value="">Select permission level...</option>
                                 <option value="admin">Admin</option>
@@ -184,6 +197,7 @@
             </div>
         </div>
     </div>
+
     <div id="confirmationModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -199,6 +213,7 @@
             </div>
         </div>
     </div>
+
     <div id="nodeModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeNodeModal()">&times;</span>

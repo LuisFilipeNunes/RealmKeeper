@@ -1,3 +1,42 @@
+:root {
+
+    /* Primary Color */
+    --dark-spring-green: #226F54;
+    /* Complimentary Color */
+    --claret: #6F223D;
+
+    /* Monochromatic adjust */
+    --up-spring-green: #2E9672;
+
+    /* Analogous adjust */
+        /* Left-end - Primary*/ 
+        /* Mid */ --caribbean-current: #22646F;
+        /* Right-end */ --up-space-cadet: #226F2D;
+
+    /* Tertiary Colors */
+        /* Left-end - Primary*/ 
+        /* Mid */ --tekhelet: #54226f;
+        /* Right-end */ --field-drab: #6f5422;
+
+    /* Tetradic Colors */
+        /* Left-bottom - Primary*/
+        /* Right-Top - Complimentary*/
+        /* Right-bottom */ --moss-green: #636f22;
+        /* Left-top */ --midnight-blue: #331cb3;
+
+    /* Whites */
+        /* First */ --floral-white: #fbf8efff;
+        /* Second */ --up-floral-white: rgb(253, 251, 246);
+
+    /* Black */
+        /* First */ --rich-black: #031c25ff;
+
+    /* Shades */
+        /* First */ --off-dark-spring-green: #1c5c46;
+
+        
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -9,7 +48,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(90deg,#063041 35%, #BB4C1D);
+    background: linear-gradient(180deg, var(--up-space-cadet) 35%, var(--dark-spring-green));
     padding: 2rem;
     margin: 0;
 }
@@ -55,7 +94,7 @@ body {
 }
 
 .auth-button {
-    background: linear-gradient(#BB4C1D, #126175 60%);
+    background: linear-gradient(180deg, var(--up-space-cadet) 35%, var(--dark-spring-green));
     color: #FBF8EF;
     padding: 12px;
     border: none;

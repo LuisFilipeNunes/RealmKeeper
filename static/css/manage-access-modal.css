@@ -1,0 +1,226 @@
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(3, 28, 37, 0.7);
+    backdrop-filter: blur(8px);
+}
+
+.modal-content {
+    background: var(--rich-black);
+    margin: 5% auto;
+    padding: 2.5rem;
+    border: 2px solid rgba(251, 248, 239, 0.2);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 800px;
+    color: var(--floral-white);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.modal h2 {
+    color: var(--floral-white);
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.modal h3 {
+    color: var(--up-floral-white);
+
+}
+
+.permissions-section {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.permission-group {
+    margin-bottom: 1.5rem;
+}
+
+.permission-group h4 {
+    color: var(--floral-white);
+    margin-bottom: 1rem;
+}
+
+.user-badge {
+    border: 1.5px solid var(--rich-black);
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    margin: 0.5rem;
+}
+
+.user-badge.owner {
+    background: var(--dark-spring-green);
+}
+
+.user-badge.admin {
+    background: var(--midnight-blue);
+}
+
+.user-badge.viewer {
+    background: var(--claret);
+}
+
+.add-permission-section {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    border-radius: 12px;
+}
+
+.form-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+
+::placeholder {
+    color: var(--floral-white);
+    opacity: 0.8;
+}
+
+.form-group input,
+
+.add-permission-btn {
+    background: var(--dark-spring-green);
+    color: var(--floral-white);
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.remove-user {
+    background: transparent;
+    border: none;
+    color: var(--floral-white);
+    margin-left: 8px;
+    padding: 0;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.remove-user:hover {
+    color: var(--up-floral-white);
+    transform: scale(1.1);
+}
+
+.add-permission-btn:hover {
+    background: var(--off-dark-spring-green);
+    transform: translateY(-2px);
+}
+
+.close {
+    color: var(--floral-white);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: var(--up-floral-white);
+}
+
+
+select {
+    appearance: none;
+    background: var(--glass-dark-spring-green);
+    color: var(--floral-white);
+    padding: 0.8rem 2.5rem 0.8rem 1rem;
+    border: 2px solid rgba(251, 248, 239, 0.2);
+    border-radius: 8px;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23fbf8ef' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem center;
+    background-size: 1.2rem;
+}
+
+select:hover {
+    border-color: rgba(251, 248, 239, 0.4);
+    box-shadow: 0 0 8px rgba(251, 248, 239, 0.2);
+}
+
+select:focus {
+    outline: none;
+    border-color: var(--floral-white);
+    box-shadow: 0 0 0 3px rgba(251, 248, 239, 0.3);
+}
+
+select option {
+    background: var(--dark-spring-green);
+    color: var(--floral-white);
+    padding: 12px;
+}
+
+/* Confirmation Modal */
+#confirmationModal .modal-content {
+    max-width: 400px;
+    text-align: center;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(251, 248, 239, 0.2);
+    padding-bottom: 1rem;
+}
+
+.modal-body {
+    padding: 1.5rem 0;
+    color: var(--floral-white);
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(251, 248, 239, 0.2);
+}
+
+.btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary {
+    background: rgba(251, 248, 239, 0.2);
+    color: var(--floral-white);
+}
+
+.btn-danger {
+    background: var(--claret);
+    color: var(--floral-white);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-secondary:hover {
+    background: rgba(251, 248, 239, 0.3);
+}
+
+.btn-danger:hover {
+    background: var(--off-dark-spring-green);
+}
+
+/* End of Confirmation Modal */

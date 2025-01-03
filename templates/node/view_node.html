@@ -3,7 +3,23 @@
 {% block title %}{{ node.name }}{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/view-node.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/view-node.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manage-access-modal.css') }}">
+
+<style>
+    body {
+        background-image: url("{{ url_for('static', filename='b.svg') }}"); 
+        background-attachment: fixed;
+        background-size: cover;
+        background-color: rgba(255, 250, 240, 0.9); /* Floral white with 0.8 opacity */
+        background-position: center;
+        background-blend-mode: overlay;
+        /* filter: grayscale(100%); */
+        
+    }
+</style>
 {% endblock %}
 
 {% block scripts %}
@@ -61,8 +77,8 @@ document.getElementById('saveChanges').addEventListener('click', async () => {
         }, 2000);
     }
     });
+</script>
 
-</script>>
 {% endblock %}
 
 
@@ -93,84 +109,115 @@ document.getElementById('saveChanges').addEventListener('click', async () => {
     </div>
     
     <div class="node-content">
-        <div class="node-description">
-            <h2>Description</h2>
-            <div contenteditable="true" class="editable-description">{{ node.description }}</div>
+        <div class="nodes-grid">
+            <div class="node-card">
+                <div class="node-info">
+                    <h2>Description</h2>
+                    <div contenteditable="true" class="editable-description">{{ node.description }}</div>
+                </div>
+            </div>
+    
+            {% if node.type == 'lore' %}
+
+            <div class="node-card">
+                <div class="node-info">
+                    <h2>Lore Details</h2>
+
+                    <p>Major Piece: {{ 'Yes' if node.major else 'No' }}</p>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if node.type == 'item' %}
+            <div class="node-card">
+                <div class="node-info">
+                    <h2>Item Details</h2>
+                    <p>Current Holder: {{ node.current_holder }}</p>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if node.type == 'person' %}
+            <div class="node-card">
+                <div class="node-info">
+                    <h2>Character Details</h2>
+                    <p>Player Character: {{ 'Yes' if node.is_player else 'No' }}</p>
+                    {% if node.is_player %}
+                        <p>Player ID: {{ node.player_uuid }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
         </div>
-        
-        {% if node.type == 'lore' %}
-            <div class="node-metadata">
-                <h2>Lore Details</h2>
-                <p>Major Piece: {{ 'Yes' if node.major else 'No' }}</p>
-            </div>
-        {% endif %}
-        
-        {% if node.type == 'item' %}
-            <div class="node-metadata">
-                <h2>Item Details</h2>
-                <p>Current Holder: {{ node.current_holder }}</p>
-            </div>
-        {% endif %}
-        
-        {% if node.type == 'person' %}
-            <div class="node-metadata">
-                <h2>Character Details</h2>
-                <p>Player Character: {{ 'Yes' if node.is_player else 'No' }}</p>
-                {% if node.is_player %}
-                    <p>Player ID: {{ node.player_uuid }}</p>
-                {% endif %}
-            </div>
-        {% endif %}
     </div>
 </div>
+
 <button class="action-btn" style="padding: 8px 16px;" onclick="window.location.href='{{ url_for('realms.view_realm', identifier=realm_id) }}'">
     <i class="fas fa-arrow-left"></i> Back to Realm
 </button>
-<div id="permissionsModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Manage Permissions</h2>
-        <div class="permissions-container">
-            <div class="permission-section">
-                <h3>Viewers</h3>
-                <div class="user-list" id="viewersList">
-                    {% for viewer in node.permissions.viewers %}
-                        <div class="user-item">
-                            <span>{{ viewer }}</span>
-                            <button class="remove-user" data-user="{{ viewer }}" data-role="viewer">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    {% endfor %}
-                </div>
-                <div class="add-user">
-                    <input type="text" placeholder="Add viewer by email">
-                    <button class="add-user-btn" data-role="viewer">
-                        <i class="fas fa-plus"></i>
-                    </button>
+
+<div id="accessModal" class="modal access-modal">
+    <div class="modal-content large-modal">
+        <span class="close" onclick="closeAccessModal()">&times;</span>
+        <h2>Manage Realm Access</h2>
+        
+        <div class="permissions-section">
+            <h3>Current Permissions</h3>
+            
+            <div class="permission-group">
+                <h4>Owner</h4>
+                <div class="user-list">
+                    <span class="user-badge owner">{{ get_user_by_id(node.permissions['owner'][0]).username }}</span>
+
                 </div>
             </div>
-
-            <div class="permission-section">
-                <h3>Editors</h3>
-                <div class="user-list" id="editorsList">
-                    {% for editor in node.permissions.editors %}
-                        <div class="user-item">
-                            <span>{{ editor }}</span>
-                            <button class="remove-user" data-user="{{ editor }}" data-role="editor">
+            
+            <div class="permission-group">
+                <h4>Admins</h4>
+                <div class="user-list admin-user-list">
+                    {% for admin_id in node.permissions['editor'] %}
+                        <div class="user-badge admin">
+                            {{ get_user_by_id(admin_id).username }}
+                            <button class="remove-user" onclick="removeUser('{{ get_user_by_id(admin_id).username }}', 'admin')">
                                 <i class="fas fa-times"></i>
                             </button>
                         </div>
                     {% endfor %}
                 </div>
-                <div class="add-user">
-                    <input type="text" placeholder="Add editor by email">
-                    <button class="add-user-btn" data-role="editor">
-                        <i class="fas fa-plus"></i>
-                    </button>
+            </div>
+            
+            <div class="permission-group">
+                <h4>View-Only</h4>
+                <div class="user-list viewer-user-list">
+                    {% for viewer_id in node.permissions['viewer'] %}
+                        <div class="user-badge viewer">
+                            {{ get_user_by_id(viewer_id).username }}
+                            <button class="remove-user" onclick="removeUser('{{ get_user_by_id(viewer_id).username }}', 'viewer')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
+
+        <div class="add-permission-section">
+            <h3>Add Permission</h3>
+            <form id="addPermissionForm" onsubmit="addNewPermission(event)">
+                <div class="form-group">
+                    <input type="text" id="username" placeholder="Enter username here..." required>
+                    <select id="permissionLevel" required>
+                        <option value="">Select permission level...</option>
+                        <option value="admin">Admin</option>
+                        <option value="viewer">Viewer</option>
+                    </select>
+                    <button type="submit" class="add-permission-btn">
+                        <i class="fas fa-plus"></i> Add User
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
+</div>
 </div>
 {% endblock %}
