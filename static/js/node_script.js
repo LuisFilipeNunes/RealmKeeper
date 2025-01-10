@@ -78,73 +78,71 @@ let hasUnsavedChanges = false;
     });
     
 
-    // Handle adding users
-    document.querySelectorAll('.add-user-btn').forEach(btn => {
-        btn.addEventListener('click', async () => {
-            const role = btn.dataset.role;
-            const input = btn.parentElement.querySelector('input');
-            const email = input.value.trim();
-            
-            if (!email) return;
-
-            try {
-                const response = await fetch('/node/permissions/add', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        node_id: '{{ node.uuid }}',
-                        email: email,
-                        role: role
-                    })
-                });
-
-                if (response.ok) {
-                    const userList = document.getElementById(`${role}sList`);
-                    const userItem = document.createElement('div');
-                    userItem.className = 'user-item';
-                    userItem.innerHTML = `
-                        <span>${email}</span>
-                        <button class="remove-user" data-user="${email}" data-role="${role}">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    `;
-                    userList.appendChild(userItem);
-                    input.value = '';
-                }
-            } catch (error) {
-                console.error('Error adding user:', error);
+    async function addNewPermission(event) {
+        event.preventDefault();
+        
+        const username = document.getElementById('username').value;
+        const permissionLevel = document.getElementById('permissionLevel').value;
+        const nodeId = document.getElementById('nodeId').value;
+        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+        try {
+            const response = await fetch('/node/permissions/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token
+                },
+                body: JSON.stringify({
+                    node_id: nodeId,
+                    username: username,
+                    role: permissionLevel
+                })
+            });
+    
+            if (response.ok) {
+                const userList = document.querySelector(`.${permissionLevel}-user-list`);
+                const userBadge = document.createElement('div');
+                userBadge.className = `user-badge ${permissionLevel}`;
+                userBadge.innerHTML = `
+                    ${username}
+                    <button class="remove-user" onclick="removeUser('${username}', '${permissionLevel}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                userList.appendChild(userBadge);
+                document.getElementById('username').value = '';
+                document.getElementById('permissionLevel').value = '';
             }
-        });
-    });
-
-    // Handle removing users
-    document.querySelectorAll('.remove-user').forEach(btn => {
-        btn.addEventListener('click', async () => {
-            const user = btn.dataset.user;
-            const role = btn.dataset.role;
-
-            try {
-                const response = await fetch('/node/permissions/remove', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        node_id: '{{ node.uuid }}',
-                        email: user,
-                        role: role
-                    })
-                });
-
-                if (response.ok) {
-                    btn.parentElement.remove();
+        } catch (error) {
+            console.error('Error adding permission:', error);
+        }
+    }
+    
+    function removeUser(username, role) {
+        const nodeId = document.getElementById('nodeId').value;
+        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+        fetch('/node/permissions/remove', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': token
+            },
+            body: JSON.stringify({
+                node_id: nodeId,
+                username: username,
+                role: role
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                const userBadge = event.target.closest('.user-badge');
+                if (userBadge) {
+                    userBadge.remove();
                 }
-            } catch (error) {
-                console.error('Error removing user:', error);
             }
-        });
-    });
-
+        })
+        .catch(error => console.error('Error removing user:', error));
+    }
     
