@@ -270,8 +270,6 @@ async function removeUser(username, role) {
     });
 }
 
-
-
 function closeConfirmationModal() {
     document.getElementById('confirmationModal').style.display = 'none';
 }
@@ -356,6 +354,8 @@ document.getElementById('saveRealmChanges').addEventListener('click', async () =
                 saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
                 notification.remove();
             }, 2000);
+        }else {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
     } catch (error) {
         const notification = document.createElement('div');

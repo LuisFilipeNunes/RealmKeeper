@@ -1,9 +1,11 @@
 let hasUnsavedChanges = false;
     const editableElements = document.querySelectorAll('[contenteditable="true"]');
-    const permissionsModal = document.getElementById('permissionsModal');
-    const permissionsBtn = document.querySelector('button i.fa-users').parentElement;
-    const linksBtn = document.querySelector('button i.fa-link').parentElement;
-    const closeBtn = document.querySelector('#permissionsModal .close');
+    const accessModal = document.getElementById('accessModal');
+    const permissionsBtn = document.querySelector('.permissionsBtn');
+    const closeAccessModal = () => {
+        accessModal.style.display = 'none';
+    };
+
     // const token = "{{ csrf_token() }}";
     
     editableElements.forEach(element => {
@@ -15,18 +17,66 @@ let hasUnsavedChanges = false;
 
     // Permissions Modal Handlers
     permissionsBtn.addEventListener('click', () => {
-        permissionsModal.style.display = 'block';
-    });
-
-    closeBtn.addEventListener('click', () => {
-        permissionsModal.style.display = 'none';
+        accessModal.style.display = 'block';
     });
 
     window.onclick = function(event) {
-        if (event.target == permissionsModal) {
-            permissionsModal.style.display = 'none';
+        if (event.target == accessModal) {
+            accessModal.style.display = 'none';
         }
     };
+
+    document.getElementById('saveChanges').addEventListener('click', async () => {
+        const nodeName = document.querySelector('h1[contenteditable]').textContent;
+        const nodeDescription = document.querySelector('.editable-description').textContent;
+        const nodeId = document.getElementById('nodeId').value;
+        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+        try {
+            const response = await fetch('/node/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token
+                },
+                body: JSON.stringify({
+                    node_id: nodeId,
+                    name: nodeName,
+                    description: nodeDescription
+                })
+            });
+    
+            if (response.ok) {
+                hasUnsavedChanges = false;
+                document.getElementById('saveChanges').classList.remove('unsaved');
+                const saveBtn = document.getElementById('saveChanges');
+                saveBtn.innerHTML = '<i class="fas fa-check"></i> Saved';
+                
+                const notification = document.createElement('div');
+                notification.className = 'notification success';
+                notification.innerHTML = '<i class="fas fa-check-circle"></i> Node updated successfully!';
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+                    notification.remove();
+                }, 2000);
+            }else {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        } catch (error) {
+            console.error('Error saving changes:', error);
+            const notification = document.createElement('div');
+            notification.className = 'notification error';
+            notification.innerHTML = '<i class="fas fa-exclamation-circle"></i> Failed to update node';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 2000);
+        }
+    });
+    
 
     // Handle adding users
     document.querySelectorAll('.add-user-btn').forEach(btn => {
@@ -96,3 +146,5 @@ let hasUnsavedChanges = false;
             }
         });
     });
+
+    

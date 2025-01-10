@@ -27,56 +27,6 @@
 <script src="{{ url_for('static', filename='js/node_script.js') }}"></script>
 <!-- The token management must be done here, not in the static script. Well, thats life. -->
 <script>
-const token = "{{ csrf_token() }}";
-document.getElementById('saveChanges').addEventListener('click', async () => {
-        if (!hasUnsavedChanges) return;
-
-        const nodeData = {
-            name: document.querySelector('h1[contenteditable]').textContent.trim(),
-            description: document.querySelector('.editable-description').textContent.trim(),
-            node_id: '{{ node.uuid }}',
-            realm_id: '{{ realm_id }}'
-        };
-
-        try {
-            const response = await fetch('/node/update', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': token
-                },
-                body: JSON.stringify(nodeData)
-            });
-            if (response.ok) {
-            hasUnsavedChanges = false;
-            document.getElementById('saveChanges').classList.remove('unsaved');
-            const saveBtn = document.getElementById('saveChanges');
-            saveBtn.innerHTML = '<i class="fas fa-check"></i> Saved';
-            
-            // Add success notification
-            const notification = document.createElement('div');
-            notification.className = 'notification success';
-            notification.innerHTML = '<i class="fas fa-check-circle"></i> Node updated successfully!';
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
-                notification.remove();
-            }, 2000);
-        }
-        } catch (error) {
-        console.error('Error saving changes:', error);
-        // Add error notification
-        const notification = document.createElement('div');
-        notification.className = 'notification error';
-        notification.innerHTML = '<i class="fas fa-exclamation-circle"></i> Failed to update node';
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.remove();
-        }, 2000);
-    }
-    });
 </script>
 
 {% endblock %}
@@ -84,19 +34,25 @@ document.getElementById('saveChanges').addEventListener('click', async () => {
 
 {% block realm_content %}
 <meta name="csrf-token" content="{{ csrf_token() }}">
+
 <div class="node-view">
     <div class="node-header">
-        <div class="node-title">
+        <input type="hidden" id="nodeId" value="{{ node.uuid }}">
+        <div class="node-title" style="display: flex; align-items: center;">
             
-            <h1 contenteditable="true">{{ node.name }}</h1>
-            <span class="node-type">{{ node.type }}</span>
+            
+            <h1 contenteditable="true" data-field="name" data-node-id="{{ node.uuid }}">{{ node.name }} </h1>
+            {% if node.type == 'lore' and not node.major %}
+            <i class="fas fa-star" style="color: gold; font-size: 24px;"></i>
+            {% endif %}
+           
             
         </div>
         <div class="node-actions">
             <button class="action-btn" id="saveChanges">
                 <i class="fas fa-save"></i> Save Changes
             </button>
-            <button class="action-btn">
+            <button class="permissionsBtn">
                 <i class="fas fa-users"></i> Manage Permissions
             </button>
             <button class="action-btn">
@@ -113,41 +69,33 @@ document.getElementById('saveChanges').addEventListener('click', async () => {
             <div class="node-card">
                 <div class="node-info">
                     <h2>Description</h2>
-                    <div contenteditable="true" class="editable-description">{{ node.description }}</div>
+                    <div contenteditable="true" class="editable-description" data-field="description">{{ node.description }}</div>
                 </div>
+                
+                {% if node.type == 'item' %}
+                    <div class="node-info">
+                        <h2>Item Details</h2>
+                        <p>Current Holder: {{ node.current_holder }}</p>
+                    </div>
+                {% endif %}
+                
+                {% if node.type == 'person' %}
+    
+                {% if node.is_player %}
+    
+    
+                {% endif %}
+                    <div class="node-info">
+                        <h2>Character Details</h2>
+                        <span>Player Character: {{ 'Yes' if node.is_player else 'No' }}</p>
+                        {% if node.is_player %}
+                            <span>Player ID: {{ node.player_uuid }}</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
             </div>
     
-            {% if node.type == 'lore' %}
-
-            <div class="node-card">
-                <div class="node-info">
-                    <h2>Lore Details</h2>
-
-                    <p>Major Piece: {{ 'Yes' if node.major else 'No' }}</p>
-                </div>
-            </div>
-            {% endif %}
-            
-            {% if node.type == 'item' %}
-            <div class="node-card">
-                <div class="node-info">
-                    <h2>Item Details</h2>
-                    <p>Current Holder: {{ node.current_holder }}</p>
-                </div>
-            </div>
-            {% endif %}
-            
-            {% if node.type == 'person' %}
-            <div class="node-card">
-                <div class="node-info">
-                    <h2>Character Details</h2>
-                    <p>Player Character: {{ 'Yes' if node.is_player else 'No' }}</p>
-                    {% if node.is_player %}
-                        <p>Player ID: {{ node.player_uuid }}</p>
-                    {% endif %}
-                </div>
-            </div>
-            {% endif %}
+           
         </div>
     </div>
 </div>
@@ -177,7 +125,7 @@ document.getElementById('saveChanges').addEventListener('click', async () => {
                 <div class="user-list admin-user-list">
                     {% for admin_id in node.permissions['editor'] %}
                         <div class="user-badge admin">
-                            {{ get_user_by_id(admin_id).username }}
+                            {{ admin_id.username }}
                             <button class="remove-user" onclick="removeUser('{{ get_user_by_id(admin_id).username }}', 'admin')">
                                 <i class="fas fa-times"></i>
                             </button>

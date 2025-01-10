@@ -110,7 +110,6 @@ def update_realm(realm_id):
     db.session.commit()
     return jsonify({'message': 'Realm updated successfully'}), 200
 
-
 @realms_bp.route('/realms/<realm_id>/permissions', methods=['GET', 'POST', 'DELETE'])
 @check_session_expired
 def manage_realm_permission(realm_id):
@@ -159,7 +158,6 @@ def manage_realm_permission(realm_id):
     db.session.commit()
     action = 'added' if request.method == 'POST' else 'removed'
     return jsonify({'message': f'Permission {action} successfully'}), 200
-
 
 def get_realm_or_404(realm_id):
     """Retrieve realm by ID or return a 404 error."""
